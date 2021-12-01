@@ -13,7 +13,7 @@ G.add_edges_from(
      (8, 11), (9, 5), (9, 8),
      (10, 3), (10, 11), (10, 12), (11, 8), (11, 10), (11, 13), (12, 10), (12, 13), (13, 5), (13, 11), (13, 12)])
 nx.draw(G, with_labels=True)
-plt.show()
+#plt.show()
 
 
 class masternode:
@@ -36,39 +36,71 @@ class masternode:
 
 
     pop11=list(nx.shortest_simple_paths(G, pop1[0][0], pop1[0][1]))
+    luk11=pop11[0]
+    count11=len(luk11)
+    #print("luk11", luk11)
     pop11= random.sample(pop11, len(pop11))
 
 
     # testes
-    print("pop11", pop11)
-    print("quantidade de caminhos:")
-    quantidade_de_caminhos = len(paths0)
-    print(quantidade_de_caminhos)
-    print("Dados do grafo:")
-    print(G)
-    print("lista dos caminhos:")
-    print(paths0)
-    print("LUK: ", luk)
-    print("pop1: ", pop1)
-    print("pop2: ", pop2)
-    print("quantidade do primeiro elemento", len(paths0[0]))
-    print("arestas",G.edges())
+    #print("pop11", pop11)
+    #print("quantidade de caminhos:")
+    #quantidade_de_caminhos = len(paths0)
+    #print(quantidade_de_caminhos)
+    #print("Dados do grafo:")
+    #print(G)
+    #print("lista dos caminhos:")
+    #print(paths0)
+    #print("LUK: ", luk)
+    #print("pop1: ", pop1)
+    #print("pop2: ", pop2)
+    #print("quantidade do primeiro elemento", len(paths0[0]))
+    #print("arestas",G.edges())
 
 
     #criando um dicionario para alocação de onda
-    list=G.edges
+    list=G.nodes
     dict={}
+    #print("lista", list)
     for x in range(len(list)):
-        dict[x]=[random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),
-                       random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1)]
+        dict[x]=[0,0,0,0,0,0,0,0]
+        #dict[x]=[random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),
+        #               random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1)]
 
     print(dict.values())
     print(dict.keys())
+    print('pop11', pop11)
+    print('luk11',luk11)
+    print(count11)
 
     CHANCE_MUT = .20
     CHANCE_CO = .25
     NUM_INDIVIDUOS = len(pop11)
     NUM_MELHORES = 4
+    TIME_SPEND=3
+    bests=[]
+    fbests=[]
 
-    for x in NUM_INDIVIDUOS:
+    for x in range(NUM_INDIVIDUOS):
+        wave=random.randint(0,7)
+        for y in range(len(pop11[x])):
+            for z in pop11[y]:
+                if dict[z]==0:
+                    bests.append(pop11[x][y])
+
+
+    '''''
+    for x in range(NUM_INDIVIDUOS):
+        function=count11-len(pop11[x])
+        if function==0:
+            bests.append(pop11[x])
+    '''''
+
+    print(bests)
+
+
+
+
+
+
 
