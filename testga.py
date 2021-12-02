@@ -81,26 +81,27 @@ class masternode:
     bests=[]
     fbests=[]
 
+
+
+    ''''
+    
     for x in range(NUM_INDIVIDUOS):
         wave=random.randint(0,7)
+        print("wave",wave)
         for y in range(len(pop11[x])):
-            for z in pop11[y]:
-                if dict[z]==0:
-                    bests.append(pop11[x][y])
+            for z in dict.values():
+                print("zwave",z[wave])
+                z[wave]=0
+                #print("z>>>", z)
+                dict[wave]=z
+                print("Dict",dict)
 
 
-    '''''
     for x in range(NUM_INDIVIDUOS):
         function=count11-len(pop11[x])
         if function==0:
             bests.append(pop11[x])
     '''''
 
-    print(bests)
-
-
-
-
-
-
+    
 
