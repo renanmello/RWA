@@ -14,8 +14,7 @@ G.add_edges_from(
      (10, 3), (10, 11), (10, 12), (11, 8), (11, 10), (11, 13), (12, 10), (12, 13), (13, 5), (13, 11), (13, 12)])
 nx.draw(G, with_labels=True)
 
-
-plt.show()
+#plt.show()
 
 
 class masternode:
@@ -23,32 +22,41 @@ class masternode:
     request = [(1, 11), (1, 12), (1, 8), (2, 13)]
 
     # faz o yen e guarda os caminhos
-    #5 melhores melhores caminhos sem precisar embaralhar
+    # 5 melhores melhores caminhos sem precisar embaralhar
     paths0 = list(nx.shortest_simple_paths(G, 1, 11))
     paths1 = list(nx.shortest_simple_paths(G, 1, 12))
     paths2 = list(nx.shortest_simple_paths(G, 1, 8))
     paths3 = list(nx.shortest_simple_paths(G, 2, 13))
 
     # tabela de menores caminhos
-    luk = [paths0[0], paths1[0], paths2[0],paths3[0]]
-
+    luk = [paths0[0], paths1[0], paths2[0], paths3[0]]
 
     # embaralhando e criando as populações de requisicoes
-    master=request
-    lukmaster=[paths0[0:4], paths1[0:4], paths2[0:4],paths3[0:4]]
+    master = request
+    lukmaster = [paths0[0:4], paths1[0:4], paths2[0:4], paths3[0:4]]
 
     pop1 = random.sample(request, len(request))
     pop2 = random.sample(request, len(request))
     pop3 = random.sample(request, len(request))
-    pop4= random.sample(request, len(request))
+    pop4 = random.sample(request, len(request))
 
-    print("pop",pop1)
+    print("pop", pop1)
     print("luk master", lukmaster)
     # criando os individuos e populacao de individuos
 
-    individuo=[]
-    populacao=[]
+    individuo = []
+    individuo2= []
+    individuo3=[]
+    individuo4=[]
+    populacao = []
+    pathi=[]
 
+
+    for j in range(4):
+        pathi.append(list(nx.shortest_simple_paths(G, pop1[j][0], pop1[j][1])))
+
+
+    print("pathi>>",pathi)
     pathi0 = list(nx.shortest_simple_paths(G, pop1[0][0], pop1[0][1]))
     pathi1 = list(nx.shortest_simple_paths(G, pop1[1][0], pop1[1][1]))
     pathi2 = list(nx.shortest_simple_paths(G, pop1[2][0], pop1[2][1]))
@@ -59,21 +67,28 @@ class masternode:
     individuo.append(pathi2[random.randrange(len(pathi2))])
     individuo.append(pathi3[random.randrange(len(pathi3))])
 
+    for j in range(4):
+        individuo2.append(pathi[j][random.randrange(len(pathi[j]))])
+        individuo3.append(pathi[j][random.randrange(len(pathi[j]))])
+        individuo4.append(pathi[j][random.randrange(len(pathi[j]))])
 
 
 
-    print(individuo)
+    #individuo2.append((pathi[0][random.randrange(len(pathi[0]))]))
+
+
+    print("path0", pathi0)
+    print("individuos",individuo)
+    print("individuo teste", individuo2)
     populacao.append(individuo)
+    populacao.append(individuo2)
+    populacao.append(individuo3)
+    populacao.append(individuo4)
 
 
+    print("População :",populacao)
 
 
-
-    pop11 = list(nx.shortest_simple_paths(G, pop1[0][0], pop1[0][1]))
-    luk11 = pop11[0]
-    count11 = len(luk11)
-    # print("luk11", luk11)
-    pop11 = random.sample(pop11, len(pop11))
 
     # testes
     # print("pop11", pop11)
@@ -89,8 +104,14 @@ class masternode:
     # print("pop2: ", pop2)
     # print("quantidade do primeiro elemento", len(paths0[0]))
     # print("arestas",G.edges())
-    #print(paths0)
+    # print(paths0)
     # criando um dicionario para alocação de onda
+    #pop11 = list(nx.shortest_simple_paths(G, pop1[0][0], pop1[0][1]))
+    #luk11 = pop11[0]
+    #count11 = len(luk11)
+    # print("luk11", luk11)
+    #pop11 = random.sample(pop11, len(pop11))
+
     list = G.edges
     dict = {}
 
@@ -100,11 +121,11 @@ class masternode:
         # dict[x]=[random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1),
         #               random.randint(0,1),random.randint(0,1),random.randint(0,1),random.randint(0,1)]
 
-    #print(dict.values())
-    #print(dict.keys())
-    #print('pop11', pop11)
-    #print('luk11', luk11)
-    #print(count11)
+    # print(dict.values())
+    # print(dict.keys())
+    # print('pop11', pop11)
+    # print('luk11', luk11)
+    # print(count11)
 
     CHANCE_MUT = .20
     CHANCE_CO = .25
@@ -115,7 +136,6 @@ class masternode:
     fbests = []
 
     ''''
-
     for x in range(NUM_INDIVIDUOS):
         wave=random.randint(0,7)
         print("wave",wave)
@@ -126,7 +146,7 @@ class masternode:
                 #print("z>>>", z)
                 dict[wave]=z
                 print("Dict",dict)
-                
+
     for x in range(NUM_INDIVIDUOS):
         function=count11-len(pop11[x])
         if function==0:
