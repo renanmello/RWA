@@ -14,7 +14,9 @@ G.add_edges_from(
         , (13, 14), (14, 9), (14, 11), (14, 13)])
 
 # requisições
+#randomica
 request = [(1, 11), (1, 12), (1, 14), (2, 13)]
+
 
 # primeira ilha criada
 pop1 = random.sample(request, len(request))
@@ -75,6 +77,7 @@ class matrix:
         for x in range(len(lista)):
             if (walking == False):
                 return walking
+                break
             else:
                 if (x < len(lista) - 1):
 
@@ -85,17 +88,23 @@ class matrix:
                         walking = True
                     else:
                         walking = False
-            if (x == len(lista) - 1):
-                if (walking == False):
-                    return walking
+                        return walking
+                        break
+                if (x == len(lista) - 1):
+                    if (walking == False):
+                        return walking
+                        break
                 else:
                     inicio = lista[x - 1]
                     fim = lista[x]
                     if (self.get_aresta(inicio, fim) == 0):
+                        walking=True
                         return walking
+                        break
                     else:
                         walking = False
                         return walking
+                        break
 
     def mostra_matriz(self):
         print()
@@ -162,7 +171,6 @@ w4 = matrix(len(nlist))
 w4t = matrix(len(nlist))
 
 # alocado primeiro cromossomo
-nota = 0
 ranking = []
 std = []
 wave = 0
@@ -181,6 +189,9 @@ for x in range(len(populacao)):
 ciclo = 0
 wave = random.randrange(4)
 
+
+
+
 for x in range(len(std)):
 
     if (ciclo == 4):
@@ -198,15 +209,19 @@ for x in range(len(std)):
         for q in range(len(w1t.desaloca)):
             w1.remove_aresta(w1t.desaloca[q][0], w1t.desaloca[q][1])
 
+
+
     if (len(w2t.desaloca) > 0):
 
         for q in range(len(w2t.desaloca)):
             w2.remove_aresta(w2t.desaloca[q][0], w2t.desaloca[q][1])
 
+
     if (len(w3t.desaloca) > 0):
 
         for q in range(len(w3t.desaloca)):
             w3.remove_aresta(w3t.desaloca[q][0], w3t.desaloca[q][1])
+
 
     if (len(w4t.desaloca) > 0):
 
@@ -217,6 +232,7 @@ for x in range(len(std)):
         w2t.desaloca = []
         w3t.desaloca = []
         w4t.desaloca = []
+
     for y in range(len(std[x])):
 
         if (wave == 0):
@@ -229,6 +245,7 @@ for x in range(len(std)):
             else:
 
                 ranking.append(1)
+
                 for j in range(len(std[x])):
 
                     if (j < len(std[x]) - 1):
@@ -236,6 +253,7 @@ for x in range(len(std)):
                         fim = std[x][j + 1]
 
                         w1.adiciona_aresta(inicio, fim)
+
                         w1t.add_time(inicio, fim)
 
                 break
@@ -275,6 +293,7 @@ for x in range(len(std)):
 
             else:
                 ranking.append(3)
+
                 for j in range(len(std[x])):
 
                     if (j < len(std[x]) - 1):
@@ -352,6 +371,7 @@ aux = []
 testr = []
 add = 0
 lambidas = []
+
 for x in range(len(ranking)):
     if (add < 4):
         aux.append(ranking[x])
@@ -361,7 +381,7 @@ for x in range(len(ranking)):
         testr.append(aux)
         add = 0
         aux = []
-
+#print("tester",testr)
 aux2 = 0
 
 mediar = []
@@ -384,10 +404,10 @@ for x in range(len(testr)):
     aux2 = 0
     lambidas.append(maior)
 
-# print("tester:", testr)
-# print("lambidas:",lambidas)
-# print("mediar: ",mediar)
-# print("populacao: ", populacao)
+print("std",std)
+print("tester:", testr)
+#print("lambidas:",lambidas)
+print("populacao: ", populacao)
 
 # variavel que ira guardar todos os individuos agrupados
 popi = []
@@ -469,12 +489,13 @@ for x in range(len(popr)):
        popw3.append(popr[x])
    elif(popr[x].lambida==4):
        popw4.append(popr[x])
+
 pop_w_r=popw1+popw2+popw3+popw4
 
 #teste rankeamento por onda
-'''''
+''''
 for x in range(len(pop_w_r)):
-    print("lista rankeadas por lambidas:")
+    print("lista rankeadas por lambidas 1:")
     print("Id: ",pop_w_r[x].id)
     print("Fog: ",pop_w_r[x].fog)
     print("lambida",pop_w_r[x].lambida)
@@ -483,260 +504,262 @@ for x in range(len(pop_w_r)):
     print("numero saltos: ",pop_w_r[x].n_saltos)
 '''''
 
-pesos=[]
 
-for x in range(len(pop_w_r)):
-    if(pop_w_r[x].lambida==1):
-        pesos.append(40)
-    if (pop_w_r[x].lambida == 2):
-        pesos.append(20)
-    if (pop_w_r[x].lambida == 3):
-        pesos.append(10)
-    if (pop_w_r[x].lambida == 4):
-        pesos.append(5)
+def roullet(pop):
+    pesos = []
+    for x in range(len(pop)):
+        if (pop[x].lambida == 1):
+            pesos.append(40)
+        if (pop[x].lambida == 2):
+            pesos.append(20)
+        if (pop[x].lambida == 3):
+            pesos.append(10)
+        if (pop[x].lambida == 4):
+            pesos.append(5)
 
-soma_pesos = 0
+    soma_pesos = 0
 
-for x in range(len(pesos)):
-    soma_pesos = soma_pesos + pesos[x]
+    for x in range(len(pesos)):
+        soma_pesos = soma_pesos + pesos[x]
 
-porc = []
+    porc = []
 
-for x in range(len(pesos)):
-    porc.append((pesos[x] * 100) / soma_pesos)
+    for x in range(len(pesos)):
+        porc.append((pesos[x] * 100) / soma_pesos)
 
-soma_regua = -1
-regua = []
-addp = soma_pesos
+    soma_regua = -1
+    regua = []
+    addp = soma_pesos
 
-while (addp > 0):
-    soma_regua = soma_regua + 1
-    addp = addp - pesos[soma_regua]
-    regua.append(addp)
+    while (addp > 0):
+        soma_regua = soma_regua + 1
+        addp = addp - pesos[soma_regua]
+        regua.append(addp)
 
-escolha1=random.randrange(soma_pesos)
-escolha2=random.randrange(soma_pesos)
+    escolha1 = random.randrange(soma_pesos)
+    escolha2 = random.randrange(soma_pesos)
 
-print("escolha 1", escolha1)
-print("escolha 2", escolha2)
-posicao=-1
-posicao2=-1
-while(escolha1>0):
-    posicao=posicao+1
-    escolha1=escolha1-pesos[posicao]
-while(escolha2>0):
-    posicao2=posicao2+1
-    escolha2=escolha2-pesos[posicao2]
+    #print("escolha 1", escolha1)
+    #print("escolha 2", escolha2)
+    posicao = -1
+    posicao2 = -1
+    while (escolha1 > 0):
+        posicao = posicao + 1
+        escolha1 = escolha1 - pesos[posicao]
+    while (escolha2 > 0):
+        posicao2 = posicao2 + 1
+        escolha2 = escolha2 - pesos[posicao2]
 
-best_w1=pop_w_r[posicao].lambida
-best_w2=pop_w_r[posicao2].lambida
-t_par1=[]
-t_par2=[]
-t_par3=[]
+    return pop[posicao].lambida, pop[posicao2].lambida
 
-if(best_w1==best_w2):
+
+best_w1,best_w2=roullet(pop_w_r)
+
+
+def choose_Parents(w1,w2):
+
+    t_par1 = []
+    t_par2 = []
+    c_dad=False
+    c_mon=False
+
     for x in range(len(pop_w_r)):
-        if(pop_w_r[x].lambida==best_w1):
-            t_par3.append(pop_w_r[x])
-    if(len(t_par3)==1):
-        melhorpai=t_par3[0]
-        t_par3.pop(0)
-        print("Choose another parent")
-    else:
-        melhorpai=t_par3[0]
-        t_par3.pop(0)
-        if(len(t_par3)==0):
-            print("Choose another parent")
-        else:
-            melhormae=t_par3[0]
-            t_par3.pop(0)
-            if(len(t_par3)>0):
-                for x in range(len(t_par3)):
-                    if(melhorpai.n_saltos>t_par3[x].n_saltos):
-                        melhorpai=melhorpai
-                    else:
-                        melhorpai=t_par3[x]
-                        t_par3.pop(x)
-                    if(len(t_par3)==0):
-                        break
-                    else:
-                        if(melhormae.n_saltos>t_par3[x].n_saltos):
-                            melhormae=melhormae
-                        else:
-                            melhormae=t_par3[x]
-                            t_par3.pop(x)
-                            if(len(t_par3)==0):
-                                break
-                            else:
-                                continue
-
-else:
-    for x in range(len(pop_w_r)):
-        if(pop_w_r[x].lambida==best_w1):
+        if (pop_w_r[x].lambida == w1):
             t_par1.append(pop_w_r[x])
-        if(pop_w_r[x].lambida==best_w2):
+        if (pop_w_r[x].lambida == w2):
             t_par2.append(pop_w_r[x])
 
     melhorpai = t_par1[0]
     t_par1.pop(0)
+    c_dad=True
 
-    melhormae=t_par2[0]
+    melhormae = t_par2[0]
     t_par2.pop(0)
-
-    if(len(t_par1)>0):
-        for x in range(len(t_par1)):
-            if(len(t_par1)==0):
-                break
+    c_mon=True
+    if(len(t_par1)==0):
+        c_dad=True
+    else:
+        if(len(t_par1)==1):
+            if(melhorpai.n_saltos>t_par1[0].n_saltos):
+                melhorpai=t_par1[0]
+                c_dad=True
             else:
+                melhorpai=melhorpai
+                c_dad=True
+        else:
+            for x in range(len(t_par1)):
                 if(melhorpai.n_saltos>t_par1[x].n_saltos):
-                    melhorpai=melhorpai
-                else:
                     melhorpai=t_par1[x]
-                    t_par1.pop(x)
-                if(len(t_par1)==0):
-                    break
+                    c_dad=True
                 else:
-                    continue
+                    melhorpai=melhorpai
+                    c_dad=True
 
-    if(len(t_par2>0)):
-        for x in range(len(t_par2)):
-            if(len(t_par2==0)):
-                break
+    if (len(t_par2) == 0):
+        c_mon = True
+    else:
+        if (len(t_par2) == 1):
+            if (melhormae.n_saltos > t_par2[0].n_saltos):
+                melhormae = t_par2[0]
+                c_mon = True
             else:
-                if(melhormae.n_saltos>t_par2[x].n_saltos):
-                    melhormae=melhormae
+                melhormae = melhormae
+                c_mon = True
+        else:
+            for x in range(len(t_par2)):
+                if (melhormae.n_saltos > t_par2[x].n_saltos):
+                    melhormae = t_par2[x]
+                    c_mon = True
                 else:
-                    melhormae=t_par2[x]
-                    t_par2.pop(x)
-                if(len(t_par2)==0):
-                    break
+                    melhormae = melhormae
+                    c_mon = True
+
+    if(c_dad==True and c_mon==True):
+        return melhorpai, melhormae
+
+def choose_Parests2(w):
+    t_par=[]
+    c_dad=False
+    c_mon=False
+
+    for x in range(len(pop_w_r)):
+        if(pop_w_r[x].lambida==w):
+            t_par.append(pop_w_r[x])
+
+    melhorpai = t_par[0]
+    c_dad=True
+
+    if (len(t_par) == 0):
+        c_dad = True
+    else:
+        if (len(t_par) == 1):
+            if (melhorpai.n_saltos > t_par[0].n_saltos):
+                melhorpai = t_par[0]
+                c_dad = True
+            else:
+                melhorpai = melhorpai
+                c_dad = True
+        else:
+            for x in range(len(t_par)):
+                if (melhorpai.n_saltos > t_par[x].n_saltos):
+                    melhorpai = t_par[x]
+                    c_dad = True
                 else:
-                    continue
+                    melhorpai = melhorpai
+                    c_dad = True
+
+    for x in range(len(pop_w_r)):
+        if(melhorpai==pop_w_r[x]):
+            pop_w_r.pop(x)
+            break
+
+    for x in range(len(t_par)):
+        if(melhorpai==t_par[x]):
+            t_par.pop(x)
+            break
+
+    if(len(t_par)==0):
+        h_w=False
+        while(h_w==False):
+            new_wave1,new_wave2=roullet(pop_w_r)
+
+            for x in range(len(pop_w_r)):
+                if(new_wave1==pop_w_r[x].lambida):
+                    h_w=True
+                    t_par.append(pop_w_r[x])
+
+
+        #for x in range(len(pop_w_r)):
+        #    if(new_wave1==pop_w_r[x].lambida):
+        #        t_par.append(pop_w_r[x])
+
+        if(len(t_par)==0):
+            for x in range(len(pop_w_r)):
+                if (new_wave2 == pop_w_r[x]):
+                    t_par.append(pop_w_r[x])
+        if(len(t_par)==0):
+            new_wave1 , new_wave2 = roullet(pop_w_r)
+            for x in range(len(pop_w_r)):
+                if (new_wave1==pop_w_r[x].lambida):
+                    t_par.append(pop_w_r[x])
+
+
+        melhormae = t_par[0]
+        c_mon=True
+        if (len(t_par) == 0):
+            c_mon = True
+        else:
+            if (len(t_par) == 1):
+                if (melhormae.n_saltos > t_par[0].n_saltos):
+                    melhormae = t_par[0]
+                    c_mon = True
+                else:
+                    melhormae = melhormae
+                    c_mon = True
+            else:
+                for x in range(len(t_par)):
+                    if (melhormae.n_saltos > t_par[x].n_saltos):
+                        melhormae = t_par[x]
+                        c_mon = True
+                    else:
+                        melhormae = melhormae
+                        c_mon = True
+    elif(len(t_par)==1):
+        melhormae=t_par[0]
+        c_mon=True
+
+    if(c_mon==True):
+     c_mon=True
+
+    else:
+        melhormae=t_par[0]
+        c_mon = True
+        if (len(t_par) == 0):
+            c_mon = True
+        else:
+            if (len(t_par) == 1):
+                if (melhormae.n_saltos > t_par[0].n_saltos):
+                    melhormae = t_par[0]
+                    c_mon = True
+                else:
+                    melhormae = melhormae
+                    c_mon = True
+            else:
+                for x in range(len(t_par)):
+                    if (melhormae.n_saltos > t_par[x].n_saltos):
+                        melhormae = t_par[x]
+                        c_mon = True
+                    else:
+                        melhormae = melhormae
+                        c_mon = True
+
+    if(c_dad==True and c_mon==True):
+        return melhorpai, melhormae
+
+
+
+
+
+best_dad=0
+best_mon=0
+if(best_w1!=best_w2):
+    best_dad , best_mon=choose_Parents(best_w1, best_w2)
+
+else:
+    best_dad , best_mon=choose_Parests2(best_w1)
+#testepais
 
 print("melhor pai:")
-print("Id: ",melhorpai.id)
-print("lambida: ",melhorpai.lambida)
-print("Saltos: ",melhorpai.n_saltos)
-print("cromossomo:",melhorpai.cromossomo)
-print("caminhos:",melhorpai.caminhos)
+print("Id: ",best_dad.id)
+print("lambida: ",best_dad.lambida)
+print("Saltos: ",best_dad.n_saltos)
+print("cromossomo:",best_dad.cromossomo)
+print("caminhos:",best_dad.caminhos)
 print("\nmelhor mae:")
-print("Id: ",melhormae.id)
-print("lambida: ",melhormae.lambida)
-print("Saltos: ",melhormae.n_saltos)
-print("cromossomo:",melhormae.cromossomo)
-print("caminhos:",melhormae.caminhos)
-'''''
-while(encontrou==False):
-
-    if (regua[0] <= escolha1 < regua[1]):
-        for y in range(len(pop_w_r)):
-            if (pop_w_r[y].n_saltos == 16):
-                pai = pop_w_r[y]
-                pais.append(pai)
-                encontrou=True
-    if (regua[1] <= escolha1 < regua[2]):
-        for y in range(len(pop_w_r)):
-            if (pop_w_r[y].n_saltos == 17):
-                pai = pop_w_r[y]
-                pais.append(pai)
-                encontrou = True
-    if (regua[2] <= escolha1 < regua[3]):
-        for y in range(len(pop_w_r)):
-            if (pop_w_r[y].n_saltos == 18):
-                pai = pop_w_r[y]
-                pais.append(pai)
-                encontrou = True
-
-    if (regua[3] <= escolha1 < regua[4]):
-        for y in range(len(pop_w_r)):
-            if (pop_w_r[y].n_saltos == 19):
-                pai = pop_w_r[y]
-                pais.append(pai)
-                encontrou = True
-
-    if (regua[4] <= escolha1 < regua[5]):
-        for y in range(len(pop_w_r)):
-            if (pop_w_r[y].n_saltos == 20):
-                pai = pop_w_r[y]
-                pais.append(pai)
-                encontrou = True
-
-    if (regua[5] <= escolha1 < regua[6]):
-        for y in range(len(pop_w_r)):
-            if (pop_w_r[y].n_saltos == 21):
-                pai = pop_w_r[y]
-                encontrou = True
-
-    if (escolha1 >= regua[6]):
-        for y in range(len(pop_w_r)):
-            if (pop_w_r[y].n_saltos == 22):
-                pai = pop_w_r[y]
-                encontrou = True
-    if(encontrou==False):
-        escolha1=random.randrange(soma_pesos)
-
-
-
-teste pai
-print("pai:")
-print("Id: ", pai.id)
-print("Fog: ",pai.fog)
-print("lambida",pai.lambida)
-print("cromossomo: ",pai.cromossomo)
-print("caminho: ",pai.caminhos)
-print("numero saltos: ",pai.n_saltos)
-
-encontrou2=False
-
-while(encontrou2==False):
-
-    if(regua[0]<=escolha2<regua[1]):
-        for y in range(len(pop_w_r)):
-            if(pop_w_r[y].n_saltos==16):
-                mae=pop_w_r[y]
-                encontrou2=True
-    elif (regua[1] <= escolha2 < regua[2]):
-        for y in range(len(pop_w_r)):
-            if(pop_w_r[y].n_saltos==17):
-                mae=pop_w_r[y]
-                encontrou2 = True
-    elif (regua[2] <= escolha2 < regua[3]):
-        for y in range(len(pop_w_r)):
-            if(pop_w_r[y].n_saltos==18):
-                mae=pop_w_r[y]
-                encontrou2 = True
-    elif (regua[3] <= escolha2 < regua[4]):
-        for y in range(len(pop_w_r)):
-            if(pop_w_r[y].n_saltos==19):
-                mae=pop_w_r[y]
-                encontrou2 = True
-    elif (regua[4] <= escolha2 < regua[5]):
-        for y in range(len(pop_w_r)):
-            if(pop_w_r[y].n_saltos==20):
-                mae=pop_w_r[y]
-                encontrou2 = True
-    elif (regua[5] <= escolha2 < regua[6]):
-        for y in range(len(pop_w_r)):
-            if(pop_w_r[y].n_saltos==21):
-                mae=pop_w_r[y]
-                encontrou2 = True
-    elif (escolha2 >= regua[6]):
-        for y in range(len(pop_w_r)):
-            if(pop_w_r[y].n_saltos==22):
-                mae=pop_w_r[y]
-                encontrou2 = True
-    if(encontrou2==False):
-        escolha2=random.randrange(soma_pesos)
-
-teste mae
-print("mae:")
-print("Id: ",mae.id)
-print("Fog: ",mae.fog)
-print("lambida",mae.lambida)
-print("cromossomo: ",mae.cromossomo)
-print("caminho: ",mae.caminhos)
-print("numero saltos: ",mae.n_saltos)
-'''''
-
+print("Id: ",best_mon.id)
+print("lambida: ",best_mon.lambida)
+print("Saltos: ",best_mon.n_saltos)
+print("cromossomo:",best_mon.cromossomo)
+print("caminhos:",best_mon.caminhos)
 
 
