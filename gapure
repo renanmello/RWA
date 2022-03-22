@@ -1,0 +1,357 @@
+import random
+import  matplotlib.pyplot as plt
+
+
+#iniciar população inicial
+populacao = []
+tampop = 50
+new_pop=[]
+geracoes=30
+tx_mut=0.2
+tx_cross=0.7
+n_tourn=2
+
+def iniciapop():
+    countp = 0
+    while (countp < tampop):
+        cromossomo = []
+    # criando cromossomos com 4 espaços de indices com valores aleatorios
+        for x in range(4):
+            test = []
+            for y in range(4):
+                test.append(random.randrange(4))
+        cromossomo.append(test)
+        # adicionando os cromossomos criados na população
+        for x in range(len(cromossomo)):
+            populacao.append(cromossomo[x])
+        countp = countp + 1
+
+def melhori(pop):
+    melhor=12
+    for x in range(len(pop)):
+        if(melhor<=sum(pop[x])):
+            melhor=melhor
+        else:
+            melhor=sum(pop[x])
+            return melhor
+
+def melhorg(pop):
+    geral=0
+    for x in range(len(pop)):
+        geral=geral+sum(pop[x])
+    return geral
+
+def fitness(pop):
+    n_indi=[]
+
+    for x in range(len(pop)):
+        soma=0
+        for y in range(len(pop[x])):
+            soma=soma+pop[x][y]
+        n_indi.append(soma)
+    return n_indi
+
+def roullet(ind,pop):
+
+    pesos = []
+    for x in range(len(ind)):
+        if (ind[x] == 0):
+            pesos.append(20)
+        if (ind[x] == 1):
+            pesos.append(15)
+        if (ind[x] == 2):
+            pesos.append(14)
+        if (ind[x] == 3):
+            pesos.append(12)
+        if (ind[x] == 4):
+            pesos.append(10)
+        if (ind[x] == 5):
+            pesos.append(8)
+        if (ind[x] == 6):
+            pesos.append(7)
+        if (ind[x] == 7):
+            pesos.append(6)
+        if (ind[x] == 8):
+            pesos.append(5)
+        if (ind[x] == 9):
+            pesos.append(4)
+        if (ind[x] == 10):
+            pesos.append(3)
+        if (ind[x] == 11):
+            pesos.append(2)
+        if (ind[x] == 12):
+            pesos.append(1)
+
+    soma_pesos = 0
+
+    for x in range(len(pesos)):
+        soma_pesos = soma_pesos + pesos[x]
+
+    porc = []
+
+    for x in range(len(pesos)):
+        porc.append((pesos[x] * 100) / soma_pesos)
+
+    soma_regua = -1
+    regua = []
+    addp = soma_pesos
+
+    while (addp > 0):
+        soma_regua = soma_regua + 1
+        addp = addp - pesos[soma_regua]
+        regua.append(addp)
+
+    escolha1 = random.randrange(soma_pesos)
+    escolha2 = random.randrange(soma_pesos)
+
+    # print("escolha 1", escolha1)
+    # print("escolha 2", escolha2)
+    posicao = -1
+    posicao2 = -1
+    while (escolha1 > 0):
+        posicao = posicao + 1
+        escolha1 = escolha1 - pesos[posicao]
+    while (escolha2 > 0):
+        posicao2 = posicao2 + 1
+        escolha2 = escolha2 - pesos[posicao2]
+    #if(posicao>len(pop)):
+    #    posicao=posicao%len(pop)
+
+    #if(posicao2>len(pop)):
+
+    #    posicao2=posicao2%len(pop)
+
+
+    return pop[posicao], pop[posicao2]
+
+def tournament(pop, apt):
+
+    if(n_tourn==2):
+        r1 = random.randrange(len(pop))
+        r2 = random.randrange(len(pop))
+        n1 = pop[r1]
+        n2 = pop[r2]
+
+        if (apt[r1] > apt[r2]):
+            pai1 = n2
+        else:
+            pai1 = n1
+
+        r1 = random.randrange(len(pop))
+        r2 = random.randrange(len(pop))
+        n1 = pop[r1]
+        n2 = pop[r2]
+
+        if (apt[r1] > apt[r2]):
+            pai2 = n2
+        else:
+            pai2 = n1
+
+        return pai1, pai2
+
+    if(n_tourn==3):
+        r1 = random.randrange(len(pop))
+        r2 = random.randrange(len(pop))
+        r3 = random.randrange(len(pop))
+        n1 = pop[r1]
+        n2 = pop[r2]
+        n3 = pop[r3]
+        compair=[apt[r1],apt[r2],apt[r3]]
+        best=12
+        indice=0
+        for x in range(len(compair)):
+            if(compair[x]<best):
+                best=compair[x]
+                indice=x
+            else:
+                best=best
+                indice=indice
+
+        if (indice == 0):
+            pai1 = n1
+        if (indice == 1):
+            pai1 = n2
+        if (indice == 2):
+            pai1 = n2
+
+        r1 = random.randrange(len(pop))
+        r2 = random.randrange(len(pop))
+        r3 = random.randrange(len(pop))
+        n1 = pop[r1]
+        n2 = pop[r2]
+        n3 = pop[r3]
+        compair = [apt[r1], apt[r2], apt[r3]]
+        best = 12
+        indice = 0
+        for x in range(len(compair)):
+            if (compair[x] < best):
+                best = compair[x]
+                indice = x
+            else:
+                best = best
+                indice = indice
+
+        if (indice == 0):
+            pai2 = n1
+        if (indice == 1):
+            pai2 = n2
+        if (indice == 2):
+            pai2 = n2
+
+        return pai1,pai2
+
+
+
+
+
+
+
+def crossover(pai1,pai2):
+    corte = 0
+    corte = random.randrange(6)
+
+    if (corte == 0):
+        filho1=pai1[0:1] + pai2[1:4]
+    if (corte == 1):
+        filho1=pai2[0:1] + pai1[1:4]
+    if (corte == 2):
+        filho1=pai2[0:2] + pai1[2:4]
+    if (corte == 3):
+        filho1=pai1[0:2] + pai2[2:4]
+    if (corte == 4):
+        filho1=pai1[0:3] + pai2[3:4]
+    if (corte == 5):
+        filho1 =pai2[0:3] + pai1[3:4]
+
+    corte = random.randrange(6)
+
+    if (corte == 0):
+        filho2=pai1[0:1] + pai2[1:4]
+    if (corte == 1):
+        filho2=pai2[0:1] + pai1[1:4]
+    if (corte == 2):
+        filho2=pai2[0:2] + pai1[2:4]
+    if (corte == 3):
+        filho2=pai1[0:2] + pai2[2:4]
+    if (corte == 4):
+        filho2=pai1[0:3] + pai2[3:4]
+    if (corte == 5):
+        filho2 =pai2[0:3] + pai1[3:4]
+
+
+
+
+    return filho1,filho2
+
+def mutacao(filho):
+    indice=0
+    numero=0
+    indice=random.randrange(4)
+    numero=random.randrange(4)
+    filho[indice] == numero
+
+    while(filho[indice]==numero):
+        numero = random.randrange(4)
+        filho[indice] == numero
+
+    return filho
+
+iniciapop()
+print("populacao inicial", populacao)
+countg=0
+#aptidaog=[]
+#grafm=[]
+geracoesg=[]
+grafmg=[]
+while(countg<geracoes):
+    print("geração "+str(countg)+":")
+    geracoesg.append(countg+1)
+
+    if(countg==0):
+        popt=[]
+        while(len(new_pop)<tampop):
+            valores = fitness(populacao)
+
+            # selecionar torneio,roullet ou ranking
+            pai1, pai2 = tournament(populacao, valores)
+            #pai1, pai2 = roullet(valores, populacao)
+
+
+
+            if(pai1==pai2):
+
+                continue
+            else:
+                cross = 0
+                cross = (random.randrange(100)) / 100
+
+
+                if (cross > tx_cross):
+
+                    continue
+                else:
+
+                    filho1, filho2 = crossover(pai1, pai2)
+                    mut = 0
+                    mut = (random.randrange(100)) / 100
+
+                    if(mut>tx_mut):
+                        new_pop.append(filho1)
+                        new_pop.append(filho2)
+                    else:
+                        filho1=mutacao(filho1)
+                        filho2=mutacao(filho2)
+                        new_pop.append(filho1)
+                        new_pop.append(filho2)
+
+        #print("melhor ap: ", melhori(new_pop))
+        #grafm.append(melhori(new_pop))
+        grafmg.append(melhorg(new_pop))
+        print("pop:", new_pop)
+    else:
+        #print("new pop", new_pop)
+        popt=new_pop
+        new_pop=[]
+        while (len(new_pop) < tampop):
+            valores = fitness(popt)
+
+            #selecionar torneio,roullet ou ranking
+            pai1, pai2 = tournament(popt, valores)
+            #pai1, pai2 = roullet(valores, popt)
+            #aptidaog.append(sum(valores))
+
+            if (pai1 == pai2):
+
+                continue
+            else:
+                cross = 0
+                cross = (random.randrange(100)) / 100
+
+                if (cross > tx_cross):
+
+                    continue
+                else:
+                    filho1, filho2 = crossover(pai1, pai2)
+                    mut=0
+                    mut=(random.randrange(100)) / 100
+                    if(mut<=tx_mut):
+                        filho1=mutacao(filho1)
+                        filho2=mutacao(filho2)
+                        new_pop.append(filho1)
+                        new_pop.append(filho2)
+                    else:
+                        new_pop.append(filho1)
+                        new_pop.append(filho2)
+        #print("melhor ap: ",melhori(new_pop))
+        #grafm.append(melhori(new_pop))
+        grafmg.append(melhorg(new_pop))
+        print("pop:", new_pop)
+    countg=countg+1
+
+print("populacao final",new_pop)
+
+#plt.plot( geracoesg, grafm)
+plt.plot(geracoesg,grafmg)
+plt.show()
+
+#tarefa - ranking
