@@ -2,7 +2,7 @@ import random
 import  matplotlib.pyplot as plt
 
 
-#iniciar população inicial
+#variáveis de configuração do Ag
 populacao = []
 tampop = 50
 new_pop=[]
@@ -11,6 +11,7 @@ tx_mut=0.2
 tx_cross=0.7
 n_tourn=2
 
+#iniciar população inicial
 def iniciapop():
     countp = 0
     while (countp < tampop):
@@ -26,6 +27,7 @@ def iniciapop():
             populacao.append(cromossomo[x])
         countp = countp + 1
 
+#melhor individuo da população
 def melhori(pop):
     melhor=12
     for x in range(len(pop)):
@@ -35,12 +37,14 @@ def melhori(pop):
             melhor=sum(pop[x])
             return melhor
 
+#aptidao total por população
 def melhorg(pop):
     geral=0
     for x in range(len(pop)):
         geral=geral+sum(pop[x])
     return geral
 
+#funcao fitness para valor de aptidao
 def fitness(pop):
     n_indi=[]
 
@@ -51,6 +55,7 @@ def fitness(pop):
         n_indi.append(soma)
     return n_indi
 
+#funcao da roleta
 def roullet(ind,pop):
 
     pesos = []
@@ -124,6 +129,7 @@ def roullet(ind,pop):
 
     return pop[posicao], pop[posicao2]
 
+#função do torneio usando grupos de 2 ou 3 individuos
 def tournament(pop, apt):
 
     if(n_tourn==2):
@@ -200,12 +206,7 @@ def tournament(pop, apt):
 
         return pai1,pai2
 
-
-
-
-
-
-
+#função de cruzamento
 def crossover(pai1,pai2):
     corte = 0
     corte = random.randrange(6)
@@ -239,10 +240,9 @@ def crossover(pai1,pai2):
         filho2 =pai2[0:3] + pai1[3:4]
 
 
-
-
     return filho1,filho2
 
+#função de mutação
 def mutacao(filho):
     indice=0
     numero=0
@@ -255,6 +255,7 @@ def mutacao(filho):
         filho[indice] == numero
 
     return filho
+
 
 iniciapop()
 print("populacao inicial", populacao)
@@ -275,8 +276,6 @@ while(countg<geracoes):
             # selecionar torneio,roullet ou ranking
             pai1, pai2 = tournament(populacao, valores)
             #pai1, pai2 = roullet(valores, populacao)
-
-
 
             if(pai1==pai2):
 
@@ -349,6 +348,11 @@ while(countg<geracoes):
     countg=countg+1
 
 print("populacao final",new_pop)
+aptotal=0
+for x in range(len(new_pop)):
+    aptotal=aptotal+sum(new_pop[x])
+print("aptidao final", aptotal)
+
 
 #plt.plot( geracoesg, grafm)
 plt.plot(geracoesg,grafmg)
