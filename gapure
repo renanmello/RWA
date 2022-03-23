@@ -6,10 +6,20 @@ import  matplotlib.pyplot as plt
 populacao = []
 tampop = 50
 new_pop=[]
-geracoes=30
+geracoes=50
 tx_mut=0.2
 tx_cross=0.7
 n_tourn=2
+#operadores de crossover
+# 1- para cruzamento ponto unico
+# 2- para cruzamento uniforme
+cross_type=2
+
+#operadores de mutação
+# 1- para mutação uniforme
+# 2- para mutação troca/swap
+mut_type=1
+
 
 #iniciar população inicial
 def iniciapop():
@@ -208,36 +218,44 @@ def tournament(pop, apt):
 
 #função de cruzamento
 def crossover(pai1,pai2):
-    corte = 0
-    corte = random.randrange(6)
 
-    if (corte == 0):
-        filho1=pai1[0:1] + pai2[1:4]
-    if (corte == 1):
-        filho1=pai2[0:1] + pai1[1:4]
-    if (corte == 2):
-        filho1=pai2[0:2] + pai1[2:4]
-    if (corte == 3):
-        filho1=pai1[0:2] + pai2[2:4]
-    if (corte == 4):
-        filho1=pai1[0:3] + pai2[3:4]
-    if (corte == 5):
-        filho1 =pai2[0:3] + pai1[3:4]
+    if(cross_type==1):
+        corte = 0
+        corte = random.randrange(6)
 
-    corte = random.randrange(6)
+        if (corte == 0):
+            filho1 = pai1[0:1] + pai2[1:4]
+            filho2 = pai2[0:1] + pai1[1:4]
+        if (corte == 1):
+            filho1 = pai2[0:1] + pai1[1:4]
+            filho2 = pai1[0:1] + pai2[1:4]
+        if (corte == 2):
+            filho1 = pai2[0:2] + pai1[2:4]
+            filho2 = pai1[0:2] + pai2[2:4]
+        if (corte == 3):
+            filho1 = pai1[0:2] + pai2[2:4]
+            filho2 = pai2[0:2] + pai1[2:4]
+        if (corte == 4):
+            filho1 = pai1[0:3] + pai2[3:4]
+            filho2 = pai2[0:3] + pai1[3:4]
+        if (corte == 5):
+            filho1 = pai2[0:3] + pai1[3:4]
+            filho2 = pai1[0:3] + pai2[3:4]
 
-    if (corte == 0):
-        filho2=pai1[0:1] + pai2[1:4]
-    if (corte == 1):
-        filho2=pai2[0:1] + pai1[1:4]
-    if (corte == 2):
-        filho2=pai2[0:2] + pai1[2:4]
-    if (corte == 3):
-        filho2=pai1[0:2] + pai2[2:4]
-    if (corte == 4):
-        filho2=pai1[0:3] + pai2[3:4]
-    if (corte == 5):
-        filho2 =pai2[0:3] + pai1[3:4]
+    if(cross_type==2):
+        filho1=[]
+        filho2=[]
+        for x in range(len(pai1)):
+            if(x%2==0):
+                filho1.append(pai1[x])
+                filho2.append(pai2[x])
+            else:
+                filho1.append(pai2[x])
+                filho2.append(pai1[x])
+
+
+
+
 
 
     return filho1,filho2
@@ -357,5 +375,3 @@ print("aptidao final", aptotal)
 #plt.plot( geracoesg, grafm)
 plt.plot(geracoesg,grafmg)
 plt.show()
-
-#tarefa - ranking
