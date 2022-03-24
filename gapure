@@ -18,7 +18,7 @@ cross_type=2
 #operadores de mutação
 # 1- para mutação uniforme
 # 2- para mutação troca/swap
-mut_type=1
+mut_type=2
 
 
 #iniciar população inicial
@@ -71,31 +71,24 @@ def roullet(ind,pop):
     pesos = []
     for x in range(len(ind)):
         if (ind[x] == 0):
-            pesos.append(20)
+            pesos.append(35)
         if (ind[x] == 1):
-            pesos.append(15)
+            pesos.append(20)
         if (ind[x] == 2):
-            pesos.append(14)
+            pesos.append(15)
         if (ind[x] == 3):
-            pesos.append(12)
-        if (ind[x] == 4):
             pesos.append(10)
-        if (ind[x] == 5):
-            pesos.append(8)
-        if (ind[x] == 6):
-            pesos.append(7)
-        if (ind[x] == 7):
+        if (ind[x] == 4):
             pesos.append(6)
-        if (ind[x] == 8):
+        if (ind[x] == 5):
             pesos.append(5)
-        if (ind[x] == 9):
+        if (ind[x] == 6):
             pesos.append(4)
-        if (ind[x] == 10):
+        if (ind[x] == 7):
             pesos.append(3)
-        if (ind[x] == 11):
+        if (ind[x] >= 8):
             pesos.append(2)
-        if (ind[x] == 12):
-            pesos.append(1)
+
 
     soma_pesos = 0
 
@@ -216,6 +209,11 @@ def tournament(pop, apt):
 
         return pai1,pai2
 
+def ranking(pop,val):
+    valg=sorted(val)
+
+
+
 #função de cruzamento
 def crossover(pai1,pai2):
 
@@ -262,15 +260,18 @@ def crossover(pai1,pai2):
 
 #função de mutação
 def mutacao(filho):
-    indice=0
-    numero=0
-    indice=random.randrange(4)
-    numero=random.randrange(4)
-    filho[indice] == numero
-
-    while(filho[indice]==numero):
+    if(mut_type==1):
+        indice = 0
+        numero = 0
+        indice = random.randrange(4)
         numero = random.randrange(4)
         filho[indice] == numero
+
+
+    if(mut_type==2):
+        pos1=random.randrange(4)
+        pos2=random.randrange(4)
+        filho[pos1], filho[pos2] = filho[pos2], filho[pos1]
 
     return filho
 
@@ -375,3 +376,5 @@ print("aptidao final", aptotal)
 #plt.plot( geracoesg, grafm)
 plt.plot(geracoesg,grafmg)
 plt.show()
+
+#tarefa - ranking
