@@ -6,19 +6,19 @@ import  matplotlib.pyplot as plt
 populacao = []
 tampop = 50
 new_pop=[]
-geracoes=50
-tx_mut=0.2
+geracoes=30
+tx_mut=0.1
 tx_cross=0.7
 n_tourn=2
 #operadores de crossover
 # 1- para cruzamento ponto unico
 # 2- para cruzamento uniforme
-cross_type=2
+cross_type=1
 
 #operadores de mutação
 # 1- para mutação uniforme
 # 2- para mutação troca/swap
-mut_type=2
+mut_type=1
 
 
 #iniciar população inicial
@@ -209,8 +209,84 @@ def tournament(pop, apt):
 
         return pai1,pai2
 
+
 def ranking(pop,val):
-    valg=sorted(val)
+    pesos=[]
+    for x in range(len(val)):
+        pesos.append(int(val[x]*100))
+
+    soma_pesos = 0
+
+    for x in range(len(pesos)):
+        soma_pesos = soma_pesos + pesos[x]
+
+    soma_regua = -1
+    regua = []
+    addp = soma_pesos
+
+    while (addp > 0):
+        soma_regua = soma_regua + 1
+        addp = addp - pesos[soma_regua]
+        regua.append(addp)
+
+    escolha1 = random.randrange(soma_pesos)
+    escolha2 = random.randrange(soma_pesos)
+
+    posicao = -1
+    posicao2 = -1
+    while (escolha1 > 0):
+        posicao = posicao + 1
+        escolha1 = escolha1 - pesos[posicao]
+    while (escolha2 > 0):
+        posicao2 = posicao2 + 1
+        escolha2 = escolha2 - pesos[posicao2]
+
+    rank1=[]
+    for x in range(len(pop)):
+        rank1.append(sum(pop[x]))
+
+    rank2=sorted(rank1,reverse=True)
+    print("rank2", rank2)
+    print("posicoes")
+    print(posicao)
+    print(posicao2)
+    fitness1=rank2[posicao]
+    fitness2=rank2[posicao2]
+    poptt=[]
+    for x in range(len(pop)):
+        poptt.append(pop[x])
+
+    for x in range(len(poptt)):
+        if(fitness1==(sum(poptt[x]))):
+            pai1=poptt[x]
+            poptt.pop(x)
+            break
+
+    for x in range(len(poptt)):
+        if(fitness2==(sum(poptt[x]))):
+            pai2=poptt[x]
+            break
+
+
+
+    return pai1, pai2
+
+def compute_sel_prob(population_fitness):
+  """Computes and generates tuples of (rank, individual_fitness,
+     selection_probability) for each individual's fitness, using the Linear
+     Ranking Selection algorithm."""
+
+  # Get the number of individuals in the population.
+  n = len(population_fitness)
+
+  # Use the gauss formula to get the sum of all ranks (sum of integers 1 to N).
+  rank_sum = n * (n + 1) / 2
+
+
+  # Sort and go through all individual fitnesses; enumerate ranks from 1.
+  for rank, ind_fitness in enumerate(sorted(population_fitness, reverse=True), 1):
+    yield rank, ind_fitness, float(rank) / rank_sum
+
 
 
 
@@ -251,11 +327,6 @@ def crossover(pai1,pai2):
                 filho1.append(pai2[x])
                 filho2.append(pai1[x])
 
-
-
-
-
-
     return filho1,filho2
 
 #função de mutação
@@ -290,11 +361,22 @@ while(countg<geracoes):
     if(countg==0):
         popt=[]
         while(len(new_pop)<tampop):
-            valores = fitness(populacao)
+
+            population_fitness = fitness(populacao)
+
+
+            probs=[]
+
+            #for rank, ind_fitness, sel_prob in compute_sel_prob(population_fitness):
+            #    print("%4d %7.2f %8.2f%%" % (rank, ind_fitness, sel_prob * 100))
+
+            for  rank,ind_fitness,sel_prob in compute_sel_prob(population_fitness):
+                probs.append(sel_prob*100)
 
             # selecionar torneio,roullet ou ranking
-            pai1, pai2 = tournament(populacao, valores)
-            #pai1, pai2 = roullet(valores, populacao)
+            pai1, pai2 = tournament(populacao, population_fitness)
+            # pai1, pai2 = roullet(population_fitness, populacao)
+            # pai1,pai2=ranking(populacao,probs)
 
             if(pai1==pai2):
 
@@ -331,11 +413,16 @@ while(countg<geracoes):
         popt=new_pop
         new_pop=[]
         while (len(new_pop) < tampop):
-            valores = fitness(popt)
+            population_fitness = fitness(popt)
+            probs = []
+            for  rank,ind_fitness,sel_prob in compute_sel_prob(population_fitness):
+                probs.append(sel_prob*100)
 
-            #selecionar torneio,roullet ou ranking
-            pai1, pai2 = tournament(popt, valores)
-            #pai1, pai2 = roullet(valores, popt)
+            # selecionar torneio,roullet ou ranking
+            pai1, pai2 = tournament(popt, population_fitness)
+            # pai1, pai2 = roullet(population_fitness, popt)
+            # pai1, pai2 = ranking(popt, probs)
+
             #aptidaog.append(sum(valores))
 
             if (pai1 == pai2):
