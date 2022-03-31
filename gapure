@@ -1,5 +1,6 @@
 import random
 import  matplotlib.pyplot as plt
+import math
 
 
 #variáveis de configuração do Ag
@@ -7,18 +8,20 @@ populacao = []
 tampop = 50
 new_pop=[]
 geracoes=30
-tx_mut=0.1
+tx_mut=0.2
 tx_cross=0.7
 n_tourn=2
 #operadores de crossover
 # 1- para cruzamento ponto unico
 # 2- para cruzamento uniforme
-cross_type=1
+# 3- cruzamento aritmetico
+cross_type=3
 
 #operadores de mutação
-# 1- para mutação uniforme
+# 1- para mutação flip
 # 2- para mutação troca/swap
-mut_type=1
+# 3- para mutação por inserção
+mut_type=3
 
 
 #iniciar população inicial
@@ -327,6 +330,19 @@ def crossover(pai1,pai2):
                 filho1.append(pai2[x])
                 filho2.append(pai1[x])
 
+    if(cross_type==3):
+        filho1=[]
+        filho2=[]
+
+        for x in range(len(pai1)):
+            filho1.append(math.ceil((pai1[x]+pai2[x])/2))
+
+        for x in range(len(pai1)):
+            filho2.append(math.floor((pai1[x]+pai2[x])/2))
+
+
+
+
     return filho1,filho2
 
 #função de mutação
@@ -343,6 +359,21 @@ def mutacao(filho):
         pos1=random.randrange(4)
         pos2=random.randrange(4)
         filho[pos1], filho[pos2] = filho[pos2], filho[pos1]
+
+    if(mut_type==3):
+        while (True):
+            indice1 = random.randrange(3)
+            indice2 = random.randrange(4)
+            if (indice1 != indice2):
+                break
+            else:
+                continue
+        g2 = filho.pop(indice2)
+
+        filho.insert(indice1 + 1, g2)
+
+
+
 
     return filho
 
@@ -374,9 +405,9 @@ while(countg<geracoes):
                 probs.append(sel_prob*100)
 
             # selecionar torneio,roullet ou ranking
-            pai1, pai2 = tournament(populacao, population_fitness)
+            pai1 , pai2 = tournament(populacao, population_fitness)
             # pai1, pai2 = roullet(population_fitness, populacao)
-            # pai1,pai2=ranking(populacao,probs)
+            # pai1 , pai2 = ranking(populacao,probs)
 
             if(pai1==pai2):
 
@@ -419,9 +450,9 @@ while(countg<geracoes):
                 probs.append(sel_prob*100)
 
             # selecionar torneio,roullet ou ranking
-            pai1, pai2 = tournament(popt, population_fitness)
-            # pai1, pai2 = roullet(population_fitness, popt)
-            # pai1, pai2 = ranking(popt, probs)
+            pai1 , pai2 = tournament(popt, population_fitness)
+            # pai1 , pai2 = roullet(population_fitness, popt)
+            # pai1 , pai2 = ranking(popt, probs)
 
             #aptidaog.append(sum(valores))
 
